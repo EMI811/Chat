@@ -1,38 +1,44 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="stylesheet" href="style.css">
-    <link rel="manifest" href="manifest.json">
-    <script src="https://cdn.tailwindcss.com"></script>
     <title>Survival Chat</title>
 </head>
-<body>
+<body class="flex flex-col">
 
-    <div id="view-chat" class="flex flex-col h-full relative">
-        <header class="ios-blur p-4 pt-12 border-b border-zinc-800 flex items-center justify-between">
-            <div class="flex items-center" onclick="app.showSearch()">
-                <div class="w-10 h-10 bg-gradient-to-tr from-pink-500 to-yellow-500 rounded-full mr-3"></div>
-                <h3 class="font-bold">Mi Sobreviviente ❤️</h3>
-            </div>
-            <button onclick="app.call()" class="text-blue-500">📞</button>
-        </header>
-
-        <div id="msg-container"></div>
-
-        <footer class="p-2 pb-8 ios-blur border-t border-zinc-800 flex items-center gap-2">
-            <button onclick="app.toggleMenu()" class="text-blue-500 text-3xl px-2">+</button>
-            <input id="msg-input" type="text" placeholder="Mensaje" class="flex-1 bg-zinc-800 rounded-full px-4 py-2 text-white outline-none">
-            <button onclick="app.send()" class="bg-blue-600 rounded-full w-10 h-10 flex items-center justify-center">⬆️</button>
-        </footer>
-
-        <div id="menu-plus" class="absolute bottom-0 w-full ios-blur p-10 grid grid-cols-3 gap-6 rounded-t-3xl z-50">
-            <div onclick="app.openDraw()" class="text-center"><div class="bg-blue-500 p-4 rounded-2xl mb-1">🎨</div><span>Dibujo</span></div>
-            <div onclick="app.sendImg()" class="text-center"><div class="bg-green-500 p-4 rounded-2xl mb-1">🖼️</div><span>Fotos</span></div>
-            <div onclick="app.sendAudio()" class="text-center"><div class="bg-red-500 p-4 rounded-2xl mb-1">🎙️</div><span>Audio</span></div>
+    <header class="glass fixed top-0 w-full z-40 flex items-center justify-between p-4 pt-12">
+        <div class="flex items-center">
+            <div style="width:36px; height:36px; border-radius:50%; background: linear-gradient(45deg, #ff5e62, #ff9966); margin-right:10px;"></div>
+            <b id="chat-title">Mi Sobreviviente ❤️</b>
         </div>
+        <button onclick="app.call()" style="background:none; border:none; color:#007AFF; font-size:20px;">📞</button>
+    </header>
+
+    <div id="msg-container"></div>
+
+    <footer class="glass p-3 pb-8 flex items-center gap-2">
+        <button onclick="app.toggleMenu()" style="background:none; border:none; color:#007AFF; font-size:30px;">+</button>
+        <input id="msg-input" type="text" placeholder="iMessage" style="flex:1; background:#1c1c1e; border:none; border-radius:20px; padding:10px 15px; color:white; outline:none;">
+        <button onclick="app.send()" style="background:#007AFF; border:none; border-radius:50%; width:32px; height:32px; color:white;">⬆</button>
+    </footer>
+
+    <div id="menu-plus" class="ios-modal glass" style="height: 40%; top: auto; bottom: 0;">
+        <button class="close-btn" onclick="app.toggleMenu()">×</button>
+        <div style="display:grid; grid-template-cols: repeat(3, 1fr); gap:20px; padding:60px 20px;">
+            <div onclick="app.openModal('draw')" style="text-align:center;"><div style="background:#007AFF; padding:15px; border-radius:15px; font-size:24px;">🎨</div><small>Dibujar</small></div>
+            <div onclick="app.openModal('pics')" style="text-align:center;"><div style="background:#34C759; padding:15px; border-radius:15px; font-size:24px;">🖼️</div><small>Fotos</small></div>
+            <div onclick="app.openModal('audio')" style="text-align:center;"><div style="background:#FF3B30; padding:15px; border-radius:15px; font-size:24px;">🎙️</div><small>Audio</small></div>
+        </div>
+    </div>
+
+    <div id="modal-draw" class="ios-modal">
+        <button class="close-btn" onclick="app.closeModal('draw')">×</button>
+        <h3 style="text-align:center; margin-top:55px;">Dibujo Compartido</h3>
+        <canvas id="canvas" style="background:white; width:100%; height:70%; margin-top:20px;"></canvas>
+        <button onclick="app.saveDraw()" style="width:90%; margin:5%; background:#007AFF; border:none; padding:15px; border-radius:12px; color:white; font-weight:bold;">Enviar al Chat</button>
     </div>
 
     <script type="module" src="script.js"></script>
