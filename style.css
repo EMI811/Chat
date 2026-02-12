@@ -1,79 +1,124 @@
 :root {
-    --ios-blue: #007AFF;
-    --ios-bg: #000000;
-    --ios-card: rgba(28, 28, 30, 0.7);
-    --safe-area-top: env(safe-area-inset-top);
+    --ig-bg: #000000;
+    --ig-input: #262626;
+    --ig-bubble-sent: linear-gradient(45deg, #a033ff, #3366ff);
+    --ig-bubble-received: #262626;
 }
 
 body {
     margin: 0;
-    background-color: var(--ios-bg);
+    background: var(--ig-bg);
     color: white;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+    font-family: -apple-system, system-ui, sans-serif;
     height: 100vh;
-    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
-/* Blur estilo Apple */
-.glass {
-    backdrop-filter: blur(25px) saturate(180%);
-    -webkit-backdrop-filter: blur(25px) saturate(180%);
-    background: var(--ios-card);
-    border-bottom: 0.5px solid rgba(255,255,255,0.1);
+/* Header */
+.ig-header {
+    padding: 45px 15px 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 0.5px solid #333;
+    position: sticky;
+    top: 0;
+    background: black;
+    z-index: 10;
 }
 
-/* Contenedor de mensajes con scroll suave */
+.profile-pic {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    border-radius: 50%;
+    margin: 0 10px;
+}
+
+.username { font-weight: 600; display: block; font-size: 14px; }
+.status { font-size: 11px; color: #a8a8a8; }
+
+/* Mensajes */
 #msg-container {
     flex: 1;
     overflow-y: auto;
     padding: 15px;
-    padding-top: calc(var(--safe-area-top) + 60px);
     display: flex;
     flex-direction: column;
-    -webkit-overflow-scrolling: touch;
 }
 
-/* Burbujas de chat estilo iMessage */
 .msg {
     max-width: 70%;
-    padding: 10px 16px;
-    border-radius: 20px;
-    margin-bottom: 2px;
-    font-size: 16px;
-    position: relative;
+    padding: 10px 15px;
+    border-radius: 22px;
+    margin-bottom: 4px;
+    font-size: 14px;
+    line-height: 1.4;
 }
 
-.sent { background: var(--ios-blue); align-self: flex-end; color: white; }
-.received { background: #262629; align-self: flex-start; }
-
-/* Overlays (Dibujo, Fotos, etc.) con botón de cierre X */
-.ios-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: black;
-    z-index: 100;
-    transform: translateY(100%);
-    transition: transform 0.4s cubic-bezier(0.15, 0, 0.2, 1);
+.sent {
+    background: var(--ig-bubble-sent);
+    align-self: flex-end;
 }
 
-.ios-modal.active { transform: translateY(0); }
+.received {
+    background: var(--ig-bubble-received);
+    align-self: flex-start;
+}
 
-.close-btn {
-    position: absolute;
-    top: 50px;
-    right: 20px;
-    width: 30px;
-    height: 30px;
-    background: rgba(255,255,255,0.2);
-    border-radius: 50%;
+/* Footer Input */
+.ig-footer {
+    padding: 10px 15px 30px;
+}
+
+.input-wrapper {
+    background: var(--ig-input);
+    border-radius: 30px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    color: white;
-    font-weight: bold;
-    z-index: 110;
+    padding: 5px 12px;
+    border: 1px solid #363636;
+}
+
+#msg-input {
+    background: transparent;
     border: none;
+    color: white;
+    flex: 1;
+    padding: 10px;
+    outline: none;
+}
+
+.plus-btn { color: #0095f6; font-weight: bold; font-size: 20px; }
+
+/* Modal con la X */
+.modal-bottom {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: #262626;
+    border-radius: 20px 20px 0 0;
+    transform: translateY(100%);
+    transition: 0.3s;
+    z-index: 100;
+}
+
+.modal-bottom.active { transform: translateY(0); }
+
+.close-x {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+}
+
+.menu-grid {
+    padding: 50px 20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    text-align: center;
 }

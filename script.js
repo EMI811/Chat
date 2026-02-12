@@ -1,43 +1,50 @@
-// ... (Toda la parte de importación e inicialización de Firebase igual que antes)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyD7n-tMYYBTihfQz09itP3zKTclVf1sYyI",
+    authDomain: "islasobrevivientes.firebaseapp.com",
+    databaseURL: "https://islasobrevivientes-default-rtdb.firebaseio.com",
+    projectId: "islasobrevivientes",
+    storageBucket: "islasobrevivientes.firebasestorage.app",
+    messagingSenderId: "56763727889",
+    appId: "1:56763727889:web:89b84f77cf6bbb6e59b1b0"
+};
+
+const appData = initializeApp(firebaseConfig);
+const db = getDatabase(appData);
+const chatRef = ref(db, 'ig_clone_chat');
+
+const miUser = "Yo"; // Puedes cambiarlo por un prompt
 
 window.app = {
-    // Abrir cualquier modal (Dibujo, Fotos, etc.)
-    openModal(id) {
-        document.getElementById(`modal-${id}`).classList.add('active');
-        if(id === 'draw') this.initCanvas();
-        this.toggleMenu(); // Cerrar el menú + al abrir una opción
-    },
-
-    // Cerrar cualquier modal
-    closeModal(id) {
-        document.getElementById(`modal-${id}`).classList.remove('active');
+    send() {
+        const input = document.getElementById('msg-input');
+        if (!input.value) return;
+        push(chatRef, {
+            user: miUser,
+            text: input.value,
+            time: Date.now()
+        });
+        input.value = "";
     },
 
     toggleMenu() {
-        document.getElementById('menu-plus').classList.toggle('active');
+        document.getElementById('action-menu').classList.toggle('active');
     },
 
-    initCanvas() {
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight * 0.7;
-        
-        let drawing = false;
-        canvas.ontouchstart = () => { drawing = true; ctx.beginPath(); };
-        canvas.ontouchend = () => drawing = false;
-        canvas.ontouchmove = (e) => {
-            if(!drawing) return;
-            const t = e.touches[0];
-            ctx.lineTo(t.clientX, t.clientY - 100); // Ajuste por cabecera
-            ctx.stroke();
-        };
-    },
-
-    saveDraw() {
-        const dataUrl = document.getElementById('canvas').toDataURL();
-        this.send('img', dataUrl);
-        this.closeModal('draw');
+    openTool(name) {
+        alert("Abriendo " + name + "... Aquí cargaríamos tu función de dibujo.");
+        this.toggleMenu();
     }
-    // ... (resto de funciones de send e inicialización de mensajes)
 };
+
+onChildAdded(chatRef, (snap) => {
+    const data = snap.val();
+    const container = document.getElementById('msg-container');
+    const div = document.createElement('div');
+    div.className = `msg ${data.user === miUser ? 'sent' : 'received'}`;
+    div.innerText = data.text;
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+});
