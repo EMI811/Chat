@@ -1,104 +1,48 @@
-:root {
-    --ios-blue: #007AFF;
-    --ig-grad: linear-gradient(45deg, #a033ff, #3366ff);
-    --bg-dark: #000000;
-    --card-dark: #1c1c1e;
-}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@900&display=swap');
 
-body, html {
-    margin: 0; padding: 0;
-    background: var(--bg-dark);
+body {
+    margin: 0;
+    background: #000;
+    font-family: 'Inter', sans-serif;
     color: white;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
-    height: 100%; overflow: hidden;
+    /* La altura total define qué tanto hay que scrollear para terminar el video */
+    height: 400vh; 
 }
 
-/* Header Glassmorphism */
-.ios-header {
-    position: fixed; top: 0; width: 100%;
-    padding: 50px 15px 10px;
-    display: flex; justify-content: space-between; align-items: center;
-    background: rgba(0,0,0,0.8);
-    backdrop-filter: blur(20px);
-    z-index: 100;
-    border-bottom: 0.5px solid #262626;
+#video-canvas {
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: 1;
 }
 
-.header-left { display: flex; align-items: center; gap: 10px; }
-.avatar { width: 36px; height: 36px; border-radius: 50%; border: 1.5px solid #333; }
-.online-dot { width: 10px; height: 10px; background: #34C759; border-radius: 50%; position: absolute; bottom: 10px; left: 65px; border: 2px solid black; }
-
-/* Chat Container */
-#chat-container {
-    height: 100vh; overflow-y: auto;
-    padding: 100px 15px 120px;
-    display: flex; flex-direction: column; gap: 4px;
+.scroll-content {
+    position: relative;
+    z-index: 10;
 }
 
-.bubble {
-    max-width: 75%; padding: 10px 15px;
-    border-radius: 20px; font-size: 15px; line-height: 1.4;
-}
-.sent { background: var(--ig-grad); align-self: flex-end; border-bottom-right-radius: 4px; }
-.received { background: #262626; align-self: flex-start; border-bottom-left-radius: 4px; }
-
-/* Footer Input */
-.ios-footer {
-    position: fixed; bottom: 0; width: 100%;
-    padding: 10px 10px 35px;
-    background: var(--bg-dark);
+.step {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    text-shadow: 0 5px 15px rgba(0,0,0,0.8);
 }
 
-.input-area {
-    background: #1c1c1e; border-radius: 30px;
-    padding: 5px 8px; display: flex; align-items: center; gap: 10px;
+.title { font-size: 5vw; letter-spacing: 10px; }
+.game-logo { font-size: 12vw; margin: 0; }
+.game-logo span { color: #ff00ff; }
+
+/* Estilo Rockstar */
+.loader {
+    position: fixed; inset: 0; background: #000;
+    display: flex; justify-content: center; align-items: center;
+    z-index: 1000; transition: opacity 1s;
 }
-
-#msg-input {
-    flex: 1; background: none; border: none; color: white;
-    font-size: 16px; outline: none; padding: 10px 0;
-}
-
-.icon-circle {
-    width: 32px; height: 32px; background: var(--ios-blue);
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-}
-
-/* Modales / Overlays */
-.overlay {
-    position: fixed; inset: 0; background: rgba(0,0,0,0.5);
-    z-index: 200; display: none;
-}
-.menu-content {
-    position: absolute; bottom: 0; width: 100%;
-    background: #2c2c2e; border-radius: 20px 20px 0 0;
-    padding-bottom: 50px; transform: translateY(100%); transition: 0.3s;
-}
-.overlay.active .menu-content { transform: translateY(0); }
-.overlay.active { display: block; }
-
-.menu-grid {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    padding: 30px 20px; gap: 20px; text-align: center;
-}
-
-.icon-box {
-    width: 60px; height: 60px; border-radius: 18px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 24px; margin: 0 auto 8px;
-}
-.blue { background: #007AFF; } .orange { background: #FF9500; } .pink { background: #FF2D55; }
-
-/* Vistas de Cámara y Dibujo */
-.view { position: fixed; inset: 0; z-index: 300; background: black; }
-.hidden { display: none !important; }
-
-#video-stream { width: 100%; height: 100%; object-fit: cover; }
-.camera-ui { position: absolute; bottom: 50px; width: 100%; display: flex; justify-content: space-around; align-items: center; }
-.shutter { width: 70px; height: 70px; border-radius: 50%; border: 5px solid white; background: rgba(255,255,255,0.3); }
-
-canvas { background: black; cursor: crosshair; }
-.draw-header { padding: 50px 20px 20px; display: flex; justify-content: space-between; align-items: center; background: #1c1c1e; }
-.color { width: 25px; height: 25px; border-radius: 50%; border: 2px solid transparent; }
-.color.active { border-color: white; }
-.dot-white { background: white; } .dot-blue { background: #007AFF; } .dot-red { background: #FF3B30; }
+.rstar-logo { font-size: 80px; }
+.rstar-logo span { color: #f2a900; }

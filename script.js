@@ -1,6 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+import { getDatabase, ref, push, onValue, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
+// 1. CONFIGURACIÓN DE TU ISLA
 const firebaseConfig = {
     apiKey: "AIzaSyD7n-tMYYBTihfQz09itP3zKTclVf1sYyI",
     authDomain: "islasobrevivientes.firebaseapp.com",
@@ -12,128 +13,83 @@ const firebaseConfig = {
     measurementId: "G-NGKSRJ46TV"
 };
 
-const appData = initializeApp(firebaseConfig);
-const db = getDatabase(appData);
-const chatRef = ref(db, 'chat_final_ultra');
+// 2. INICIALIZAR MOTORES
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const statsRef = ref(db, 'trailer_stats/views');
+const reactionsRef = ref(db, 'trailer_reactions');
 
-const miUser = localStorage.getItem('user') || prompt("Dime tu nombre:");
-localStorage.setItem('user', miUser);
+// --- LÓGICA DE VIDEO POR SCROLL ---
+const canvas = document.getElementById("video-canvas");
+const context = canvas.getContext("2d");
 
-// Variables de Dibujo
-const canvas = document.getElementById('drawing-canvas');
-const ctx = canvas.getContext('2d');
-let drawing = false;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
+const frameCount = 150; // Más frames = más suavidad
 
+function updateCanvas(index) {
+    const scrollFraction = index / frameCount;
+    
+    // Dibujamos el fondo dinámico (Estilo Atardecer de Rockstar)
+    const r = Math.floor(43 + (scrollFraction * 212)); // De morado a naranja
+    const g = Math.floor(0 + (scrollFraction * 169));
+    const b = Math.floor(87 - (scrollFraction * 87));
+    
+    context.fillStyle = `rgb(${r}, ${g}, ${b})`;
+    context.fillRect(0, 0, canvas.width, canvas.height);
 
-window.app = {
-    // 📩 ENVIAR MENSAJE
-    sendText(type = 'text', content = null) {
-        const input = document.getElementById('msg-input');
-        const text = content || input.value;
-        if (!text) return;
-
-        push(chatRef, {
-            user: miUser,
-            content: text,
-            type: type,
-            timestamp: Date.now()
-        });
-        input.value = "";
-    },
-
-    // 📷 CÁMARA REAL
-    async openCamera() {
-        document.getElementById('camera-view').classList.remove('hidden');
-        const video = document.getElementById('video-stream');
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
-            video.srcObject = stream;
-        } catch (e) { alert("Cámara no disponible"); }
-    },
-
-    takePhoto() {
-        const video = document.getElementById('video-stream');
-        const tempCanvas = document.createElement('canvas');
-        tempCanvas.width = video.videoWidth;
-        tempCanvas.height = video.videoHeight;
-        tempCanvas.getContext('2d').drawImage(video, 0, 0);
-        this.sendText('img', tempCanvas.toDataURL('image/webp'));
-        this.closeCamera();
-    },
-
-    closeCamera() {
-        const video = document.getElementById('video-stream');
-        if (video.srcObject) video.srcObject.getTracks().forEach(t => t.stop());
-        document.getElementById('camera-view').classList.add('hidden');
-    },
-
-    // 🎨 DIBUJO REAL
-    openTool(tool) {
-        this.toggleMenu();
-        if(tool === 'draw') {
-            document.getElementById('draw-view').classList.remove('hidden');
-            this.initCanvas();
-        }
-        if(tool === 'search') {
-            const s = prompt("¿Qué palabra buscas?");
-            if(s) this.searchChat(s);
-        }
-    },
-
-    initCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight - 150;
-        ctx.strokeStyle = "white";
-        ctx.lineWidth = 5;
-        ctx.lineCap = "round";
-
-        canvas.ontouchstart = (e) => { drawing = true; ctx.beginPath(); };
-        canvas.ontouchend = () => drawing = false;
-        canvas.ontouchmove = (e) => {
-            if (!drawing) return;
-            const t = e.touches[0];
-            ctx.lineTo(t.clientX, t.clientY - 120);
-            ctx.stroke();
-        };
-    },
-
-    setColor(c) { ctx.strokeStyle = c; },
-
-    sendDraw() {
-        this.sendText('img', canvas.toDataURL());
-        document.getElementById('draw-view').classList.add('hidden');
-    },
-
-    closeTool(id) { document.getElementById(`${id}-view`).classList.add('hidden'); },
-
-    // ➕ MENÚ
-    toggleMenu() { document.getElementById('menu-overlay').classList.toggle('active'); },
-
-    makeCall() { alert("📞 Llamando a tu sobreviviente..."); },
-
-    searchChat(term) {
-        const bubbles = document.querySelectorAll('.bubble');
-        bubbles.forEach(b => {
-            b.style.opacity = b.innerText.toLowerCase().includes(term.toLowerCase()) ? "1" : "0.2";
-        });
-        setTimeout(() => bubbles.forEach(b => b.style.opacity = "1"), 5000);
+    // Efecto de "Ruido Cinematográfico"
+    for (let i = 0; i < 50; i++) {
+        context.fillStyle = `rgba(255,255,255,${Math.random() * 0.05})`;
+        context.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 2, 2);
     }
+}
+
+// Escuchar el Scroll
+window.addEventListener('scroll', () => {
+    const scrollTop = document.documentElement.scrollTop;
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    const scrollFraction = scrollTop / maxScroll;
+    const frameIndex = Math.min(frameCount - 1, Math.floor(scrollFraction * frameCount));
+    
+    requestAnimationFrame(() => updateCanvas(frameIndex));
+});
+
+// --- LÓGICA DE FIREBASE ---
+
+// Contador de visitas en tiempo real
+onValue(statsRef, (snapshot) => {
+    const views = snapshot.val() || 0;
+    // Si quieres mostrar las visitas en el HTML:
+    // document.getElementById('view-count').innerText = views + " VISTAS";
+});
+
+// Registrar una nueva visita al cargar
+const registrarVisita = () => {
+    onValue(statsRef, (snapshot) => {
+        const currentViews = snapshot.val() || 0;
+        set(statsRef, currentViews + 1);
+    }, { onlyOnce: true });
 };
 
-// 📥 RECIBIR MENSAJES
-onChildAdded(chatRef, (snap) => {
-    const data = snap.val();
-    const container = document.getElementById('chat-container');
-    const div = document.createElement('div');
-    div.className = `bubble ${data.user === miUser ? 'sent' : 'received'}`;
+// Función para que tu novia deje una reacción (ej. un corazón al final del scroll)
+window.enviarReaccion = (emoji) => {
+    push(reactionsRef, {
+        reaccion: emoji,
+        fecha: new Date().toISOString(),
+        user: "Sobreviviente"
+    }).then(() => alert("¡Reacción enviada a la base de Rockstar! 🚀"));
+};
+
+// --- INICIO ---
+window.addEventListener('load', () => {
+    registrarVisita();
+    updateCanvas(0);
     
-    if (data.type === 'img') {
-        div.innerHTML = `<img src="${data.content}" style="width:100%; border-radius:12px;">`;
-    } else {
-        div.innerText = data.content;
-    }
-    
-    container.appendChild(div);
-    container.scrollTop = container.scrollHeight;
+    // Quitar Loader
+    setTimeout(() => {
+        document.getElementById('loader').style.opacity = '0';
+        setTimeout(() => document.getElementById('loader').style.display = 'none', 1000);
+    }, 2500);
 });

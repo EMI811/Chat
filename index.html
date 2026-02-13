@@ -2,100 +2,31 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>Survival Chat Pro</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SURVIVAL VI | Official Site</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div id="main-view" class="view">
-        <header class="ios-header">
-            <div class="header-left">
-                <i class="fa-solid fa-chevron-left back-btn"></i>
-                <div class="profile-container">
-                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix" class="avatar">
-                    <div class="online-dot"></div>
-                </div>
-                <div class="user-meta" onclick="app.openInfo()">
-                    <span class="username">Mi Sobreviviente ❤️</span>
-                    <span class="status">en línea</span>
-                </div>
-            </div>
-            <div class="header-right">
-                <i class="fa-solid fa-phone" onclick="app.makeCall()"></i>
-                <i class="fa-solid fa-video" onclick="app.makeCall()"></i>
-            </div>
-        </header>
-
-        <div id="chat-container">
-            </div>
-
-        <footer class="ios-footer">
-            <div class="input-area">
-                <div class="icon-circle" onclick="app.openCamera()">
-                    <i class="fa-solid fa-camera"></i>
-                </div>
-                <input type="text" id="msg-input" placeholder="Mensaje...">
-                <div class="right-icons">
-                    <i class="fa-solid fa-microphone" id="mic-btn"></i>
-                    <i class="fa-solid fa-image" onclick="app.openGallery()"></i>
-                    <i class="fa-solid fa-plus-circle" onclick="app.toggleMenu()"></i>
-                </div>
-                <button id="send-btn" onclick="app.sendText()">
-                    <i class="fa-solid fa-arrow-up"></i>
-                </button>
-            </div>
-        </footer>
+    <div id="loader" class="loader">
+        <h2 class="rstar-logo">R<span>★</span></h2>
     </div>
 
-    <div id="menu-overlay" class="overlay" onclick="app.toggleMenu()">
-        <div class="menu-content" onclick="event.stopPropagation()">
-            <div class="menu-header">
-                <div class="handle"></div>
-                <button class="close-x" onclick="app.toggleMenu()"><i class="fa-solid fa-xmark"></i></button>
-            </div>
-            <div class="menu-grid">
-                <div class="menu-item" onclick="app.openTool('draw')">
-                    <div class="icon-box blue"><i class="fa-solid fa-palette"></i></div>
-                    <span>Dibujo</span>
-                </div>
-                <div class="menu-item" onclick="app.openTool('search')">
-                    <div class="icon-box orange"><i class="fa-solid fa-magnifying-glass"></i></div>
-                    <span>Buscar</span>
-                </div>
-                <div class="menu-item" onclick="app.openTool('sticker')">
-                    <div class="icon-box pink"><i class="fa-solid fa-face-smile"></i></div>
-                    <span>Stickers</span>
-                </div>
-            </div>
+    <canvas id="video-canvas"></canvas>
+
+    <section class="scroll-content">
+        <div class="step" style="height: 100vh;">
+            <h1 class="title">BIENVENIDO A LA ISLA</h1>
         </div>
-    </div>
-
-    <div id="camera-view" class="view hidden">
-        <video id="video-stream" autoplay playsinline></video>
-        <div class="camera-ui">
-            <button onclick="app.closeCamera()"><i class="fa-solid fa-xmark"></i></button>
-            <div class="shutter" onclick="app.takePhoto()"></div>
-            <i class="fa-solid fa-rotate-right" onclick="app.switchCamera()"></i>
+        <div class="step" style="height: 100vh;">
+            <h2 class="subtitle">UN NUEVO MUNDO TE ESPERA</h2>
         </div>
-    </div>
-
-    <div id="draw-view" class="view hidden">
-        <div class="draw-header">
-            <button onclick="app.closeTool('draw')">Cancelar</button>
-            <div class="colors">
-                <div class="color dot-white active" onclick="app.setColor('#fff')"></div>
-                <div class="color dot-blue" onclick="app.setColor('#007AFF')"></div>
-                <div class="color dot-red" onclick="app.setColor('#FF3B30')"></div>
-            </div>
-            <button onclick="app.sendDraw()" class="bold">Enviar</button>
+        <div class="step" style="height: 100vh;">
+            <h1 class="game-logo">SURVIVAL<span>VI</span></h1>
+            <p class="date">PRÓXIMAMENTE 2026</p>
         </div>
-        <canvas id="drawing-canvas"></canvas>
-    </div>
+    </section>
 
-    <script type="module" src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
