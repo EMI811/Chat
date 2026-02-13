@@ -83,13 +83,16 @@ window.enviarReaccion = (emoji) => {
 };
 
 // --- INICIO ---
+// Busca la parte final de tu script y cámbiala por esta:
+
 window.addEventListener('load', () => {
     registrarVisita();
     updateCanvas(0);
     
-    // Quitar Loader
+    const loader = document.getElementById('loader');
+    
+    // Esperamos 2.5 segundos para el drama
     setTimeout(() => {
-        document.getElementById('loader').style.opacity = '0';
-        setTimeout(() => document.getElementById('loader').style.display = 'none', 1000);
+        loader.classList.add('hidden'); // Esto activa la transición de CSS
     }, 2500);
 });

@@ -6,7 +6,7 @@ body {
     font-family: 'Inter', sans-serif;
     color: white;
     /* La altura total define qué tanto hay que scrollear para terminar el video */
-    height: 400vh; 
+    height: 600vh; 
 }
 
 #video-canvas {
@@ -38,11 +38,44 @@ body {
 .game-logo { font-size: 12vw; margin: 0; }
 .game-logo span { color: #ff00ff; }
 
-/* Estilo Rockstar */
+/* Busca estas partes en tu CSS y cámbialas por esto: */
+
+#video-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    z-index: 1; /* Al fondo */
+    pointer-events: none; /* Importante: para que el mouse "atraviese" el canvas y detecte el scroll */
+}
+
+.scroll-content {
+    position: relative;
+    z-index: 10; /* Por encima del video */
+    pointer-events: none; /* Evita que los contenedores invisibles bloqueen el scroll */
+}
+
+/* Solo los textos y botones deben tener interacción */
+.step h1, .step h2, .step p, .step button {
+    pointer-events: auto;
+}
+
 .loader {
-    position: fixed; inset: 0; background: #000;
-    display: flex; justify-content: center; align-items: center;
-    z-index: 1000; transition: opacity 1s;
+    position: fixed;
+    inset: 0;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* La capa más alta de todas */
+    transition: opacity 1s ease, visibility 1s; /* Agregamos visibility */
+}
+
+.loader.hidden {
+    opacity: 0;
+    visibility: hidden; /* Esto quita el loader del camino por completo */
 }
 .rstar-logo { font-size: 80px; }
 .rstar-logo span { color: #f2a900; }
