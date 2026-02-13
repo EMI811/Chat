@@ -5,24 +5,26 @@ body {
     background: #000;
     font-family: 'Inter', sans-serif;
     color: white;
-    /* La altura total define qué tanto hay que scrollear para terminar el video */
-    height: 600vh; 
+    height: 600vh; /* Espacio suficiente para el video */
 }
 
+/* EL VIDEO SIEMPRE DE FONDO */
 #video-canvas {
     position: fixed;
     top: 0;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 0;
     width: 100vw;
     height: 100vh;
     object-fit: cover;
-    z-index: 1;
+    z-index: 1; 
+    pointer-events: none; /* El mouse lo atraviesa */
 }
 
+/* EL TEXTO QUE FLOTA */
 .scroll-content {
     position: relative;
     z-index: 10;
+    pointer-events: none; /* No bloquea el scroll */
 }
 
 .step {
@@ -31,37 +33,20 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
-    text-shadow: 0 5px 15px rgba(0,0,0,0.8);
-}
-
-.title { font-size: 5vw; letter-spacing: 10px; }
-.game-logo { font-size: 12vw; margin: 0; }
-.game-logo span { color: #ff00ff; }
-
-/* Busca estas partes en tu CSS y cámbialas por esto: */
-
-#video-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
     height: 100vh;
-    object-fit: cover;
-    z-index: 1; /* Al fondo */
-    pointer-events: none; /* Importante: para que el mouse "atraviese" el canvas y detecte el scroll */
+    text-shadow: 0 5px 20px rgba(0,0,0,0.9);
 }
 
-.scroll-content {
-    position: relative;
-    z-index: 10; /* Por encima del video */
-    pointer-events: none; /* Evita que los contenedores invisibles bloqueen el scroll */
-}
-
-/* Solo los textos y botones deben tener interacción */
+/* Habilitamos clicks solo en lo necesario */
 .step h1, .step h2, .step p, .step button {
     pointer-events: auto;
 }
 
+.title { font-size: 8vw; letter-spacing: 5px; text-transform: uppercase; }
+.game-logo { font-size: 12vw; margin: 0; }
+.game-logo span { color: #f2a900; }
+
+/* LOADER TIPO NEOCORP */
 .loader {
     position: fixed;
     inset: 0;
@@ -69,13 +54,18 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 9999; /* La capa más alta de todas */
-    transition: opacity 1s ease, visibility 1s; /* Agregamos visibility */
+    z-index: 9999;
+    transition: opacity 1s ease, visibility 1s;
 }
 
 .loader.hidden {
     opacity: 0;
-    visibility: hidden; /* Esto quita el loader del camino por completo */
+    visibility: hidden;
 }
-.rstar-logo { font-size: 80px; }
-.rstar-logo span { color: #f2a900; }
+
+.rstar-logo { font-size: 60px; letter-spacing: 10px; }
+.step {
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+/* Esto requeriría un poquito más de JS para detectar qué texto está en pantalla */
